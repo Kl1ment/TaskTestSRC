@@ -49,6 +49,7 @@ namespace DataAccess.Repositories
             {
                 await context.Cabinets
                     .Where(c => c.Number == number)
+                    .Include(c => c.Doctors)
                     .ExecuteDeleteAsync();
 
                 await context.SaveChangesAsync();

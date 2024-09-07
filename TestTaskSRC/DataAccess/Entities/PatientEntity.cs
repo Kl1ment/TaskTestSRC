@@ -9,7 +9,7 @@
         public string Address { get; set; } = string.Empty;
         public DateTime Birthdate { get; set; }
         public string Sex { get; set; } = string.Empty;
-        public int? District { get; set; }
+        public Guid? DistrictId { get; set; }
 
         public DistrictEntity? DistrictEntity { get; set; }
         public List<AppointmentEntity>? Appointments { get; set; }

@@ -1,40 +1,34 @@
-﻿namespace Core.Models
+﻿using Core.Models.DTOs;
+
+namespace Core.Models
 {
     public class Doctor
     {
         public Guid Id { get; }
         public string FullName { get; }
-        public int? Cabinet { get; }
-        public string? Specification { get; }
-        public int? District { get; }
+        public Guid? CabinetId { get; }
+        public Guid? SpecificationId { get; }
+        public Guid? DistrictId { get; }
 
-        private Doctor(Guid id, string fullName, int? cabinet, string? specification, int? district)
+        private Doctor(Guid id, string fullName, Guid? cabinetId, Guid? specificationId, Guid? districtId)
         {
             Id = id;
             FullName = fullName;
-            Cabinet = cabinet;
-            Specification = specification;
-            District = district;
+            CabinetId = cabinetId;
+            SpecificationId = specificationId;
+            DistrictId = districtId;
         }
 
-        public static Doctor Create(Guid id, string fullName, int cabinet, string specification, int district)
+        public static Doctor Create(Guid id, string fullName, Guid? cabinetId, Guid? specificationId, Guid? districtId)
         {
             var validator = new Validator();
 
             if (!validator
                 .IsNotEmpty(fullName, nameof(FullName))
-                .IsPositive(cabinet, nameof(Cabinet))
-                .IsNotEmpty(specification, nameof(Specification))
-                .IsPositive(district, nameof(District))
                 .IsValid)
                 throw new ArgumentException(validator.Error);
 
-            return new Doctor(id, fullName, cabinet, specification, district);
-        }
-
-        public static Doctor Response(Guid id, string fullName, int? cabinet, string? specification, int? district)
-        {
-            return new Doctor(id, fullName, cabinet, specification, district);
+            return new Doctor(id, fullName, cabinetId, specificationId, districtId);
         }
     }
 }

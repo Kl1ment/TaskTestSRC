@@ -11,7 +11,7 @@ namespace TestTaskSRC.Controllers
     public class AppointmentController(IAppointmentService appointmentService) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<AppointmentForUpdateResponse>> GetAppointmentById(
+        public async Task<ActionResult<AppointmentResponse>> GetAppointmentById(
             AppointmentRequest appointmentRequest)
         {
             var result = await appointmentService.GetAppointmentByIdAsync(
@@ -20,7 +20,7 @@ namespace TestTaskSRC.Controllers
             if (result.IsFailure)
                 return BadRequest(result.Error);
 
-            return new AppointmentForUpdateResponse(
+            return new AppointmentResponse(
                 result.Value.Id,
                 result.Value.PatientId,
                 result.Value.DoctorId,

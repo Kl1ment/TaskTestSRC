@@ -7,7 +7,7 @@ namespace Application.Services
     {
         Task<Result> AddAppointmentAsync(Guid patientId, Guid doctorId, DateTime dateTime);
         Task<Result> DeleteAppointmentAsync(Guid id);
-        Task<Result<AppointmentCreator>> GetAppointmentByIdAsync(Guid id);
+        Task<Result<Appointment>> GetAppointmentByIdAsync(Guid id);
         Task<Result> UpdateAppointmentAsync(Guid patientId, Guid doctorId, DateTime dateTime);
     }
 }

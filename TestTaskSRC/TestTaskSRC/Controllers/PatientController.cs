@@ -10,11 +10,11 @@ namespace TestTaskSRC.Controllers
     public class PatientController(IPatientService patientService) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<PatientResponse>>> GetAllPatients(string sortField, int page)
+        public async Task<ActionResult<List<PatientDTOResponse>>> GetAllPatients(string sortField, int page)
         {
             var patients = await patientService.GetAllPatientsAsync(sortField, page);
 
-            return patients.Select(p => new PatientResponse(
+            return patients.Select(p => new PatientDTOResponse(
                 p.Id,
                 p.Surname,
                 p.Name,
@@ -41,7 +41,7 @@ namespace TestTaskSRC.Controllers
                 result.Value.Address,
                 result.Value.Birthdate,
                 result.Value.Sex,
-                result.Value.District);
+                result.Value.DistrictId);
         }
 
         [HttpPost]
@@ -54,7 +54,7 @@ namespace TestTaskSRC.Controllers
                 patientCreate.Address,
                 patientCreate.Birthdate,
                 patientCreate.Sex,
-                patientCreate.District);
+                patientCreate.DistrictId);
 
             if (result.IsFailure)
                 return BadRequest(result);
@@ -73,7 +73,7 @@ namespace TestTaskSRC.Controllers
                 patientCreate.Address,
                 patientCreate.Birthdate,
                 patientCreate.Sex,
-                patientCreate.District);
+                patientCreate.DistrictId);
 
             if (result.IsFailure)
                 return BadRequest(result);

@@ -8,6 +8,13 @@
         private bool _isValid = true;
         private string _error = string.Empty;
 
+        public Validator IsNotNull<T>(T value, string fieldName)
+        {
+            return Validate(
+                value != null,
+                $"{fieldName} cannot be null\n");
+        }
+
         public Validator IsNotEmpty(string value, string fieldName)
         {
             return Validate(

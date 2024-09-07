@@ -10,7 +10,7 @@ namespace TestTaskSRC.Controllers
     public class DistrictController(IDistrictService districtService) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<DistrictResponse>>> GelAllDistricts(int page)
+        public async Task<ActionResult<List<DistrictResponse>>> GetAllDistricts(int page)
         {
             var district = await districtService.GetAllDistrictsAsync(page);
 
@@ -28,7 +28,7 @@ namespace TestTaskSRC.Controllers
             if (result.IsFailure)
                 return BadRequest(result.Error);
 
-            return Ok();
+            return RedirectToAction(nameof(GetAllDistricts), new { page = 1});
         }
 
         [HttpDelete]

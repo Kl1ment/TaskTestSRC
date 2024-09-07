@@ -1,4 +1,5 @@
 ﻿using Core.Models;
+using Core.Models.DTOs;
 using CSharpFunctionalExtensions;
 
 namespace DataAccess.Repositories
@@ -18,7 +19,7 @@ namespace DataAccess.Repositories
     {
         Task<Result> AddAsync(Patient patient);
         Task<Result> DeleteAsync(Guid id);
-        Task<List<Patient>> GetAsync(PatientSortField sortField, int page);
+        Task<List<PatientDTO>> GetAsync(PatientSortField sortField, int page);
         Task<Result<Patient>> GetByIdAsync(Guid id);
         Task<Result> UpdateAsync(Patient patient);
     }

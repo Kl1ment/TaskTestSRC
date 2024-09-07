@@ -1,4 +1,5 @@
 ﻿using Core.Models;
+using Core.Models.DTOs;
 using CSharpFunctionalExtensions;
 using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -17,9 +18,9 @@ namespace DataAccess.Repositories
                 {
                     Id = doctor.Id,
                     FullName = doctor.FullName,
-                    Cabinet = doctor.Cabinet,
-                    Specification = doctor.Specification,
-                    District = doctor.District
+                    CabinetId = doctor.CabinetId,
+                    SpecificationId = doctor.SpecificationId,
+                    DistrictId = doctor.DistrictId
                 };
 
                 await context.Doctors.AddAsync(doctorEntity);
@@ -33,29 +34,32 @@ namespace DataAccess.Repositories
             }
         }
 
-        public async Task<List<Doctor>> GetAsync(DoctorSortField sortField, int page)
+        public async Task<List<DoctorDOT>> GetAsync(DoctorSortField sortField, int page)
         {
             var query = context.Doctors
                 .AsNoTracking()
                 .Skip(page - 1)
+                .Include(d => d.CabinetEntity)
+                .Include(d => d.SpecificationEntity)
+                .Include(d => d.DistrictEntity)
                 .Take(PageSize);
 
             switch (sortField)
             {
                 case DoctorSortField.FullName: query = query.OrderBy(d => d.FullName); break;
-                case DoctorSortField.Cabinet: query = query.OrderBy(d => d.Cabinet); break;
-                case DoctorSortField.Specification: query = query.OrderBy(d => d.Specification); break;
-                case DoctorSortField.District: query = query.OrderBy(d => d.District); break;
+                case DoctorSortField.Cabinet: query = query.OrderBy(d => d.CabinetEntity); break;
+                case DoctorSortField.Specification: query = query.OrderBy(d => d.SpecificationEntity); break;
+                case DoctorSortField.District: query = query.OrderBy(d => d.DistrictEntity); break;
             }
 
             var doctorEntity = await query.ToListAsync();
 
-            return doctorEntity.Select(d => Doctor.Response(
+            return doctorEntity.Select(d => DoctorDOT.Create(
                 d.Id,
                 d.FullName,
-                d.Cabinet,
-                d.Specification,
-                d.District)).ToList();
+                d.CabinetEntity?.Number,
+                d.SpecificationEntity?.Name,
+                d.DistrictEntity?.Number)).ToList();
         }
 
         public async Task<Result<Doctor>> GetByIdAsync(Guid id)
@@ -68,12 +72,12 @@ namespace DataAccess.Repositories
             if (doctorEntity == null)
                 return Result.Failure<Doctor>("The doctor was not found");
 
-            return Doctor.Response(
+            return Doctor.Create(
                 doctorEntity.Id,
                 doctorEntity.FullName,
-                doctorEntity.Cabinet,
-                doctorEntity.Specification,
-                doctorEntity.District);
+                doctorEntity.CabinetId,
+                doctorEntity.SpecificationId,
+                doctorEntity.DistrictId);
         }
 
         public async Task<Result> UpdateAsync(Doctor doctor)
@@ -84,8 +88,8 @@ namespace DataAccess.Repositories
                     .Where(d => d.Id == doctor.Id)
                     .ExecuteUpdateAsync(p => p
                         .SetProperty(d => d.FullName, doctor.FullName)
-                        .SetProperty(d => d.Cabinet, doctor.Cabinet)
-                        .SetProperty(d => d.District, doctor.District));
+                        .SetProperty(d => d.CabinetId, doctor.CabinetId)
+                        .SetProperty(d => d.DistrictId, doctor.DistrictId));
 
                 await context.SaveChangesAsync();
 

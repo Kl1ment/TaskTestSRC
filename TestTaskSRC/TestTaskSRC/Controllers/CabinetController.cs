@@ -10,7 +10,7 @@ namespace TestTaskSRC.Controllers
     public class CabinetController(ICabinetService cabinetService) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<CabinetResponse>>> GelAllCabinets(int page)
+        public async Task<ActionResult<List<CabinetResponse>>> GetAllCabinets(int page)
         {
             var cabinets = await cabinetService.GetAllCabinetsAsync(page);
 
@@ -28,7 +28,7 @@ namespace TestTaskSRC.Controllers
             if (result.IsFailure)
                 return BadRequest(result.Error);
 
-            return Ok();
+            return RedirectToAction(nameof(GetAllCabinets), new { page = 1 });
         }
 
         [HttpDelete]

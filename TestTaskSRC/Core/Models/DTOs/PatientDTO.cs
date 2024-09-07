@@ -1,6 +1,6 @@
-﻿namespace Core.Models
+﻿namespace Core.Models.DTOs
 {
-    public class Patient
+    public class PatientDTO
     {
         public Guid Id { get; }
         public string Surname { get; }
@@ -9,9 +9,9 @@
         public string Address { get; }
         public DateTime Birthdate { get; }
         public string Sex { get; }
-        public Guid? DistrictId { get; }
+        public int? District { get; }
 
-        private Patient(Guid id, string surname, string name, string patronymic, string address, DateTime birthdate, string sex, Guid? districtId)
+        private PatientDTO(Guid id, string surname, string name, string patronymic, string address, DateTime birthdate, string sex, int? district)
         {
             Id = id;
             Surname = surname;
@@ -20,10 +20,10 @@
             Address = address;
             Birthdate = birthdate;
             Sex = sex;
-            DistrictId = districtId;
+            District = district;
         }
 
-        public static Patient Create(Guid id, string surname, string name, string patronymic, string address, DateTime birthdate, string sex, Guid? districtId)
+        public static PatientDTO Create(Guid id, string surname, string name, string patronymic, string address, DateTime birthdate, string sex, int? district)
         {
             var validator = new Validator();
 
@@ -37,7 +37,7 @@
                 .IsValid)
                 throw new ArgumentException(validator.Error);
 
-            return new Patient(id, surname, name, patronymic, address, birthdate, sex, districtId);
+            return new PatientDTO(id, surname, name, patronymic, address, birthdate, sex, district);
         }
     }
 }

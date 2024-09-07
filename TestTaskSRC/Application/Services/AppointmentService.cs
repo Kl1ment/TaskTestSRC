@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.Models;
+using Core.Models.DTOs;
 using CSharpFunctionalExtensions;
 using DataAccess.Repositories;
 
@@ -7,14 +8,14 @@ namespace Application.Services
 {
     public class AppointmentService(IAppointmentRepository appointmentRepository) : IAppointmentService
     {
-        public async Task<Result<AppointmentCreator>> GetAppointmentByIdAsync(Guid id)
+        public async Task<Result<Appointment>> GetAppointmentByIdAsync(Guid id)
         {
             return await appointmentRepository.GetByIdAsync(id);
         }
 
         public async Task<Result> AddAppointmentAsync(Guid patientId, Guid doctorId, DateTime dateTime)
         {
-            var appointment = AppointmentCreator.Create(
+            var appointment = Appointment.Create(
                 Guid.NewGuid(),
                 patientId,
                 doctorId,
@@ -35,7 +36,7 @@ namespace Application.Services
 
         public async Task<Result> UpdateAppointmentAsync(Guid patientId, Guid doctorId, DateTime dateTime)
         {
-            var appointment = AppointmentCreator.Create(
+            var appointment = Appointment.Create(
                 Guid.NewGuid(),
                 patientId,
                 doctorId,

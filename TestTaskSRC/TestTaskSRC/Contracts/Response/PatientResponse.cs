@@ -8,5 +8,5 @@
         string Address,
         DateTime Birthdate,
         string Sex,
-        int? District);
+        Guid? DistrictId);
 }

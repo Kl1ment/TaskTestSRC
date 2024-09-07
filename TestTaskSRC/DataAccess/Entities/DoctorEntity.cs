@@ -4,9 +4,9 @@
     {
         public Guid Id { get; set; }
         public string FullName { get; set; } = string.Empty;
-        public int? Cabinet { get; set; }
-        public string? Specification { get; set; }
-        public int? District { get; set; }
+        public Guid? CabinetId { get; set; }
+        public Guid? SpecificationId { get; set; }
+        public Guid? DistrictId { get; set; }
 
         public DistrictEntity? DistrictEntity { get; set; }
         public CabinetEntity? CabinetEntity { get; set; }

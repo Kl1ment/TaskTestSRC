@@ -1,4 +1,5 @@
 ﻿using Core.Models;
+using Core.Models.DTOs;
 using CSharpFunctionalExtensions;
 using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ namespace DataAccess.Repositories
                     Address = patient.Address,
                     Birthdate = patient.Birthdate,
                     Sex = patient.Sex,
-                    District = patient.District
+                    DistrictId = patient.DistrictId
                 };
 
                 await context.Patients.AddAsync(patientEntity);
@@ -36,7 +37,7 @@ namespace DataAccess.Repositories
             }
         }
 
-        public async Task<List<Patient>> GetAsync(PatientSortField sortField, int page)
+        public async Task<List<PatientDTO>> GetAsync(PatientSortField sortField, int page)
         {
             var query = context.Patients
                 .AsNoTracking()
@@ -51,12 +52,12 @@ namespace DataAccess.Repositories
                 case PatientSortField.Address: query = query.OrderBy(x => x.Address); break;
                 case PatientSortField.BirthDate: query = query.OrderBy(x => x.Birthdate); break;
                 case PatientSortField.Sex: query = query.OrderBy(x => x.Sex); break;
-                case PatientSortField.District: query = query.OrderBy(x => x.District); break;
+                case PatientSortField.District: query = query.OrderBy(x => x.DistrictEntity); break;
             }
 
             var patientEntities = await query.ToListAsync();
 
-            return patientEntities.Select(p => Patient.Response(
+            return patientEntities.Select(p => PatientDTO.Create(
                 p.Id,
                 p.Surname,
                 p.Name,
@@ -64,7 +65,7 @@ namespace DataAccess.Repositories
                 p.Address,
                 p.Birthdate,
                 p.Sex,
-                p.District)).ToList();
+                p.DistrictEntity?.Number)).ToList();
         }
 
         public async Task<Result<Patient>> GetByIdAsync(Guid id)
@@ -77,7 +78,7 @@ namespace DataAccess.Repositories
             if (patientEntity == null)
                 return Result.Failure<Patient>("The patient was not found");
 
-            return Patient.Response(
+            return Patient.Create(
                 patientEntity.Id,
                 patientEntity.Surname,
                 patientEntity.Name,
@@ -85,7 +86,7 @@ namespace DataAccess.Repositories
                 patientEntity.Address,
                 patientEntity.Birthdate,
                 patientEntity.Sex,
-                patientEntity.District);
+                patientEntity.DistrictId);
         }
 
         public async Task<Result> UpdateAsync(Patient patient)
@@ -100,7 +101,7 @@ namespace DataAccess.Repositories
                         .SetProperty(p => p.Patronymic, patient.Patronymic)
                         .SetProperty(p => p.Address, patient.Address)
                         .SetProperty(p => p.Sex, patient.Sex)
-                        .SetProperty(p => p.District, patient.District));
+                        .SetProperty(p => p.DistrictId, patient.DistrictId));
 
                 await context.SaveChangesAsync();
 

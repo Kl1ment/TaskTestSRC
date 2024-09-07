@@ -1,11 +1,12 @@
-﻿namespace TestTaskSRC.Contracts.Create
+﻿namespace TestTaskSRC.Contracts.Response
 {
-    public record PatientCreate(
+    public record PatientDTOResponse(
+        Guid Id,
         string Surname,
         string Name,
         string Patronymic,
         string Address,
         DateTime Birthdate,
         string Sex,
-        Guid DistrictId);
+        int? District);
 }

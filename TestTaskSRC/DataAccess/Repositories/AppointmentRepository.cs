@@ -1,4 +1,5 @@
 ﻿using Core.Models;
+using Core.Models.DTOs;
 using CSharpFunctionalExtensions;
 using DataAccess.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +10,7 @@ namespace DataAccess.Repositories
     {
         private const int PageSize = 10;
 
-        public async Task<Result> AddAsync(AppointmentCreator appointment)
+        public async Task<Result> AddAsync(Appointment appointment)
         {
             try
             {
@@ -48,9 +49,9 @@ namespace DataAccess.Repositories
                 a.PatientEntity.Name,
                 a.PatientEntity.Patronymic,
                 a.DoctorEntity.FullName,
-                a.DoctorEntity.Specification,
+                a.DoctorEntity.SpecificationEntity?.Name,
                 a.DateTime,
-                a.DoctorEntity.Cabinet)).ToList() ?? [];
+                a.DoctorEntity.CabinetEntity?.Number)).ToList() ?? [];
         }
 
         public async Task<List<AppointmentDTO>> GetDoctorAppointmentsAsync(Guid id, int page)
@@ -70,28 +71,28 @@ namespace DataAccess.Repositories
                 a.PatientEntity.Name,
                 a.PatientEntity.Patronymic,
                 a.DoctorEntity.FullName,
-                a.DoctorEntity.Specification,
+                a.DoctorEntity.SpecificationEntity?.Name,
                 a.DateTime,
-                a.DoctorEntity.Cabinet)).ToList() ?? [];
+                a.DoctorEntity.CabinetEntity?.Number)).ToList() ?? [];
         }
 
-        public async Task<Result<AppointmentCreator>> GetByIdAsync(Guid id)
+        public async Task<Result<Appointment>> GetByIdAsync(Guid id)
         {
             var appointmentEntity = await context.Appointments
                 .AsNoTracking()
                 .FirstOrDefaultAsync(a => a.Id == id);
 
             if (appointmentEntity == null)
-                return Result.Failure<AppointmentCreator>("Appointment was not found");
+                return Result.Failure<Appointment>("Appointment was not found");
 
-            return AppointmentCreator.Create(
+            return Appointment.Create(
                 appointmentEntity.Id,
                 appointmentEntity.PatientId,
                 appointmentEntity.DoctorId,
                 appointmentEntity.DateTime);
         }
 
-        public async Task<Result> UpdateAsync(AppointmentCreator appointment)
+        public async Task<Result> UpdateAsync(Appointment appointment)
         {
             try
             {

@@ -12,8 +12,7 @@ namespace DataAccess.Configurations
 
             builder.HasMany(c => c.Doctors)
                 .WithOne(d => d.CabinetEntity)
-                .HasPrincipalKey(c => c.Number)
-                .HasForeignKey(d => d.Cabinet);
+                .HasForeignKey(d => d.CabinetId);
         }
     }
 }

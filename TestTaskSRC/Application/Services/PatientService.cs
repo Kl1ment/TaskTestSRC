@@ -1,5 +1,6 @@
 ﻿using Core;
 using Core.Models;
+using Core.Models.DTOs;
 using CSharpFunctionalExtensions;
 using DataAccess.Repositories;
 
@@ -14,7 +15,7 @@ namespace Application.Services
             string address,
             DateTime birthDate,
             string sex,
-            int district)
+            Guid districtId)
         {
             var patient = Patient.Create(
                 Guid.NewGuid(),
@@ -24,12 +25,12 @@ namespace Application.Services
                 address,
                 birthDate,
                 sex,
-                district);
+                districtId);
 
             return await patientRepository.AddAsync(patient);
         }
 
-        public async Task<List<Patient>> GetAllPatientsAsync(string sortField, int page)
+        public async Task<List<PatientDTO>> GetAllPatientsAsync(string sortField, int page)
         {
             var validator = new Validator();
 
@@ -54,7 +55,7 @@ namespace Application.Services
             string address,
             DateTime birthDate,
             string sex,
-            int district)
+            Guid districtId)
         {
             var patient = Patient.Create(
                 id,
@@ -64,7 +65,7 @@ namespace Application.Services
                 address,
                 birthDate,
                 sex,
-                district);
+                districtId);
 
             return await patientRepository.UpdateAsync(patient);
         }

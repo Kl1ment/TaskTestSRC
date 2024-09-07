@@ -12,13 +12,11 @@ namespace DataAccess.Configurations
 
             builder.HasMany(d => d.Doctors)
                 .WithOne(d => d.DistrictEntity)
-                .HasPrincipalKey(d => d.Number)
-                .HasForeignKey(d => d.District);
+                .HasForeignKey(d => d.DistrictId);
 
             builder.HasMany(d => d.Patients)
                 .WithOne(p => p.DistrictEntity)
-                .HasPrincipalKey(d => d.Number)
-                .HasForeignKey(p => p.District);
+                .HasForeignKey(p => p.DistrictId);
         }
     }
 }

@@ -10,12 +10,12 @@ namespace TestTaskSRC.Controllers
     public class DoctorController(IDoctorService doctorService) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<DoctorResponse>>> GetAllDoctors(string sortField, int page)
+        public async Task<ActionResult<List<DoctorDTOResponse>>> GetAllDoctors(string sortField, int page)
         {
             var doctors = await doctorService.GetAllDoctorsAsync(
                 sortField, page);
 
-            return doctors.Select(d => new DoctorResponse(
+            return doctors.Select(d => new DoctorDTOResponse(
                 d.Id,
                 d.FullName,
                 d.Cabinet,
@@ -34,9 +34,9 @@ namespace TestTaskSRC.Controllers
             return new DoctorResponse(
                 result.Value.Id,
                 result.Value.FullName,
-                result.Value.Cabinet,
-                result.Value.Specification,
-                result.Value.District);
+                result.Value.CabinetId,
+                result.Value.SpecificationId,
+                result.Value.DistrictId);
         }
 
         [HttpPost]
@@ -44,14 +44,14 @@ namespace TestTaskSRC.Controllers
         {
             var result = await doctorService.AddDoctorAsync(
                 doctorCreate.FullName,
-                doctorCreate.Cabinet,
-                doctorCreate.Specification,
-                doctorCreate.District);
+                doctorCreate.CabinetId,
+                doctorCreate.SpecificationId,
+                doctorCreate.DistrictId);
 
             if (result.IsFailure)
                 return BadRequest(result.Error);
 
-            return Ok();
+            return RedirectToAction(nameof(GetAllDoctors), new { sortField = "Surname", page = 1 });
         }
 
         [HttpPut]
@@ -60,9 +60,9 @@ namespace TestTaskSRC.Controllers
             var result = await doctorService.UpdateDoctorAsync(
                 id,
                 doctorCreate.FullName,
-                doctorCreate.Cabinet,
-                doctorCreate.Specification,
-                doctorCreate.District);
+                doctorCreate.CabinetId,
+                doctorCreate.SpecificationId,
+                doctorCreate.DistrictId);
 
             if (result.IsFailure)
                 return BadRequest(result.Error);

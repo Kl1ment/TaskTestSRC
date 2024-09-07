@@ -80,26 +80,26 @@ namespace DataAccess.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("Cabinet")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("CabinetId")
+                        .HasColumnType("uniqueidentifier");
 
-                    b.Property<int?>("District")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("DistrictId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Specification")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<Guid?>("SpecificationId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("Cabinet");
+                    b.HasIndex("CabinetId");
 
-                    b.HasIndex("District");
+                    b.HasIndex("DistrictId");
 
-                    b.HasIndex("Specification");
+                    b.HasIndex("SpecificationId");
 
                     b.ToTable("Doctors");
                 });
@@ -117,8 +117,8 @@ namespace DataAccess.Migrations
                     b.Property<DateTime>("Birthdate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("District")
-                        .HasColumnType("int");
+                    b.Property<Guid?>("DistrictId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -138,7 +138,7 @@ namespace DataAccess.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("District");
+                    b.HasIndex("DistrictId");
 
                     b.ToTable("Patients");
                 });
@@ -151,7 +151,7 @@ namespace DataAccess.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -181,18 +181,15 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("DataAccess.Entities.CabinetEntity", "CabinetEntity")
                         .WithMany("Doctors")
-                        .HasForeignKey("Cabinet")
-                        .HasPrincipalKey("Number");
+                        .HasForeignKey("CabinetId");
 
                     b.HasOne("DataAccess.Entities.DistrictEntity", "DistrictEntity")
                         .WithMany("Doctors")
-                        .HasForeignKey("District")
-                        .HasPrincipalKey("Number");
+                        .HasForeignKey("DistrictId");
 
                     b.HasOne("DataAccess.Entities.SpecificationEntity", "SpecificationEntity")
                         .WithMany("Doctors")
-                        .HasForeignKey("Specification")
-                        .HasPrincipalKey("Name");
+                        .HasForeignKey("SpecificationId");
 
                     b.Navigation("CabinetEntity");
 
@@ -205,8 +202,7 @@ namespace DataAccess.Migrations
                 {
                     b.HasOne("DataAccess.Entities.DistrictEntity", "DistrictEntity")
                         .WithMany("Patients")
-                        .HasForeignKey("District")
-                        .HasPrincipalKey("Number");
+                        .HasForeignKey("DistrictId");
 
                     b.Navigation("DistrictEntity");
                 });

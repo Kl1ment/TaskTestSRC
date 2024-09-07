@@ -10,7 +10,7 @@ namespace TestTaskSRC.Controllers
     public class SpecificationController(ISpecificationService specificationService) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<List<SpecificationResponse>>> GelAllSpecifications(int page)
+        public async Task<ActionResult<List<SpecificationResponse>>> GetAllSpecifications(int page)
         {
             var specifications = await specificationService.GetAllSpecificationsAsync(page);
 
@@ -28,7 +28,7 @@ namespace TestTaskSRC.Controllers
             if (result.IsFailure)
                 return BadRequest(result.Error);
 
-            return Ok();
+            return RedirectToAction(nameof(GetAllSpecifications), new { page = 1 });
         }
 
         [HttpDelete]

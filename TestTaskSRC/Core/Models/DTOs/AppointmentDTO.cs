@@ -1,4 +1,4 @@
-﻿namespace Core.Models
+﻿namespace Core.Models.DTOs
 {
     public class AppointmentDTO(
         Guid id,
