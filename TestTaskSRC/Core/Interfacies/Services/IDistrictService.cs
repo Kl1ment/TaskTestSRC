@@ -7,6 +7,6 @@ namespace Application.Services
     {
         Task<Result> AddDistrictAsync(int number);
         Task<List<District>> GetAllDistrictsAsync(int page);
-        Task<Result> DeleteDistrictAsync(int number);
+        Task<Result> DeleteDistrictAsync(Guid districtId);
     }
 }

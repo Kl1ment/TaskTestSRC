@@ -6,7 +6,7 @@
         string PatientName,
         string PatientPatronymic,
         string DoctorFullName,
-        string DoctorSpecification,
+        string? DoctorSpecification,
         DateTime DateTime,
-        int Cabinet);
+        int? Cabinet);
 }

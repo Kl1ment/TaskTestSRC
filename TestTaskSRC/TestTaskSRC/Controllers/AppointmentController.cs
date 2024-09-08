@@ -1,7 +1,6 @@
 ﻿using Application.Services;
 using Microsoft.AspNetCore.Mvc;
 using TestTaskSRC.Contracts.Create;
-using TestTaskSRC.Contracts.Request;
 using TestTaskSRC.Contracts.Response;
 
 namespace TestTaskSRC.Controllers
@@ -11,11 +10,9 @@ namespace TestTaskSRC.Controllers
     public class AppointmentController(IAppointmentService appointmentService) : ControllerBase
     {
         [HttpGet]
-        public async Task<ActionResult<AppointmentResponse>> GetAppointmentById(
-            AppointmentRequest appointmentRequest)
+        public async Task<ActionResult<AppointmentResponse>> GetAppointmentById(Guid appointmentId)
         {
-            var result = await appointmentService.GetAppointmentByIdAsync(
-                appointmentRequest.Id);
+            var result = await appointmentService.GetAppointmentByIdAsync(appointmentId);
 
             if (result.IsFailure)
                 return BadRequest(result.Error);
@@ -42,9 +39,10 @@ namespace TestTaskSRC.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateAppointment(AppointmentCreate appointmentCreate)
+        public async Task<ActionResult> UpdateAppointment(Guid appointmentId, AppointmentCreate appointmentCreate)
         {
-            var result = await appointmentService.AddAppointmentAsync(
+            var result = await appointmentService.UpdateAppointmentAsync(
+                appointmentId,
                 appointmentCreate.PatientId,
                 appointmentCreate.DoctorId,
                 appointmentCreate.DateTime);
@@ -56,10 +54,9 @@ namespace TestTaskSRC.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> DeleteAppointment(AppointmentRequest appointment)
+        public async Task<ActionResult> DeleteAppointment(Guid appointmentId)
         {
-            var result = await appointmentService.DeleteAppointmentAsync(
-                appointment.Id);
+            var result = await appointmentService.DeleteAppointmentAsync(appointmentId);
 
             if (result.IsFailure)
                 return BadRequest(result.Error);

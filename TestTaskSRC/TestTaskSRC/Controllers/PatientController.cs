@@ -7,7 +7,9 @@ namespace TestTaskSRC.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PatientController(IPatientService patientService) : ControllerBase
+    public class PatientController(
+        IPatientService patientService,
+        IAppointmentService appointmentService) : ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<List<PatientDTOResponse>>> GetAllPatients(string sortField, int page)
@@ -26,9 +28,9 @@ namespace TestTaskSRC.Controllers
         }
 
         [HttpGet("{id:Guid}")]
-        public async Task<ActionResult<PatientResponse>> GetPatientById(Guid id)
+        public async Task<ActionResult<PatientResponse>> GetPatientById(Guid patientId)
         {
-            var result = await patientService.GetPatientByIdAsync(id);
+            var result = await patientService.GetPatientByIdAsync(patientId);
 
             if (result.IsFailure)
                 return BadRequest(result.Error);
@@ -42,6 +44,22 @@ namespace TestTaskSRC.Controllers
                 result.Value.Birthdate,
                 result.Value.Sex,
                 result.Value.DistrictId);
+        }
+
+        [HttpGet("Appointments")]
+        public async Task<List<AppointmentDTOResponse>> GetAppointmentsByPatientId(Guid patientId, int page)
+        {
+            var appointments = await appointmentService.GetPatientAppointmentsAsync(patientId, page);
+
+            return appointments.Select(a => new AppointmentDTOResponse(
+                a.Id,
+                a.PatientSurname,
+                a.PatientName,
+                a.PatientPatronymic,
+                a.DoctorFullName,
+                a.Specification,
+                a.DateTime,
+                a.Cabinet)).ToList();
         }
 
         [HttpPost]
@@ -59,14 +77,14 @@ namespace TestTaskSRC.Controllers
             if (result.IsFailure)
                 return BadRequest(result);
 
-            return Ok();
+            return RedirectToAction(nameof(GetAllPatients), new { sortField = "Surname", page = 1 });
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdatePatient(Guid id, PatientCreate patientCreate)
+        public async Task<ActionResult> UpdatePatient(Guid patientId, PatientCreate patientCreate)
         {
             var result = await patientService.UpdatePatientAsync(
-                id,
+                patientId,
                 patientCreate.Surname,
                 patientCreate.Name,
                 patientCreate.Patronymic,
@@ -82,9 +100,9 @@ namespace TestTaskSRC.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> DeletePatient(Guid id)
+        public async Task<ActionResult> DeletePatient(Guid patientId)
         {
-            var result = await patientService.DeleteAsync(id);
+            var result = await patientService.DeleteAsync(patientId);
 
             if (result.IsFailure)
                 return BadRequest(result);

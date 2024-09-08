@@ -7,6 +7,6 @@ namespace Application.Services
     {
         Task<Result> AddSpecificationAsync(string name);
         Task<List<Specification>> GetAllSpecificationsAsync(int page);
-        Task<Result> DeleteSpecificationAsync(string name);
+        Task<Result> DeleteSpecificationAsync(Guid specificationId);
     }
 }

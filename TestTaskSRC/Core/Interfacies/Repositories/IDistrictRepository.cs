@@ -7,6 +7,6 @@ namespace DataAccess.Repositories
     {
         Task<Result> AddAsync(District district);
         Task<List<District>> GetAllAsync(int page);
-        Task<Result> DeleteAsync(int number);
+        Task<Result> DeleteAsync(Guid id);
     }
 }

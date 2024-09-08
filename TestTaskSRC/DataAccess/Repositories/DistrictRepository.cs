@@ -43,12 +43,12 @@ namespace DataAccess.Repositories
                 s.Number)).ToList();
         }
 
-        public async Task<Result> DeleteAsync(int number)
+        public async Task<Result> DeleteAsync(Guid id)
         {
             try
             {
                 await context.Districts
-                    .Where(d => d.Number == number)
+                    .Where(d => d.Id == id)
                     .ExecuteDeleteAsync();
 
                 await context.SaveChangesAsync();

@@ -26,9 +26,9 @@ namespace Application.Services
             return await specificationRepository.GetAllAsync(page);
         }
 
-        public async Task<Result> DeleteSpecificationAsync(string name)
+        public async Task<Result> DeleteSpecificationAsync(Guid specificationId)
         {
-            return await specificationRepository.DeleteAsync(name);
+            return await specificationRepository.DeleteAsync(specificationId);
         }
     }
 }

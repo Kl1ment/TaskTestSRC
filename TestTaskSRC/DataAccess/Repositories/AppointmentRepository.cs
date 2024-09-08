@@ -32,18 +32,21 @@ namespace DataAccess.Repositories
             }
         }
 
-        public async Task<List<AppointmentDTO>> GetPatientAppointmentsAsync(Guid id, int page)
+        public async Task<List<AppointmentDTO>> GetPatientAppointmentsAsync(Guid patientId, int page)
         {
-            var appointmentEntity = await context.Patients
+            var appointmentEntity = await context.Appointments
                 .AsNoTracking()
-                .Where(p => p.Id == id)
-                .Include(p => p.Appointments)
-                .Select(p => p.Appointments)
+                .Where(a => a.PatientId == patientId)
+                .Include(a => a.PatientEntity)
+                .Include(a => a.DoctorEntity)
+                .ThenInclude(d => d.SpecificationEntity)
+                .Include(a => a.DoctorEntity)
+                .ThenInclude(d => d.CabinetEntity)
                 .Skip(page - 1)
                 .Take(PageSize)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
 
-            return appointmentEntity?.Select(a => new AppointmentDTO(
+            return appointmentEntity.Select(a => new AppointmentDTO(
                 a.Id,
                 a.PatientEntity.Surname,
                 a.PatientEntity.Name,
@@ -51,21 +54,24 @@ namespace DataAccess.Repositories
                 a.DoctorEntity.FullName,
                 a.DoctorEntity.SpecificationEntity?.Name,
                 a.DateTime,
-                a.DoctorEntity.CabinetEntity?.Number)).ToList() ?? [];
+                a.DoctorEntity.CabinetEntity?.Number)).ToList();
         }
 
-        public async Task<List<AppointmentDTO>> GetDoctorAppointmentsAsync(Guid id, int page)
+        public async Task<List<AppointmentDTO>> GetDoctorAppointmentsAsync(Guid doctorId, int page)
         {
-            var appointmentEntity = await context.Doctors
+            var appointmentEntity = await context.Appointments
                 .AsNoTracking()
-                .Where(p => p.Id == id)
-                .Include(p => p.Appointments)
-                .Select(p => p.Appointments)
+                .Where(a => a.DoctorId == doctorId)
+                .Include(a => a.PatientEntity)
+                .Include(a => a.DoctorEntity)
+                .ThenInclude(d => d.SpecificationEntity)
+                .Include(a => a.DoctorEntity)
+                .ThenInclude(d => d.CabinetEntity)
                 .Skip(page - 1)
                 .Take(PageSize)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
 
-            return appointmentEntity?.Select(a => new AppointmentDTO(
+            return appointmentEntity.Select(a => new AppointmentDTO(
                 a.Id,
                 a.PatientEntity.Surname,
                 a.PatientEntity.Name,
@@ -73,7 +79,7 @@ namespace DataAccess.Repositories
                 a.DoctorEntity.FullName,
                 a.DoctorEntity.SpecificationEntity?.Name,
                 a.DateTime,
-                a.DoctorEntity.CabinetEntity?.Number)).ToList() ?? [];
+                a.DoctorEntity.CabinetEntity?.Number)).ToList();
         }
 
         public async Task<Result<Appointment>> GetByIdAsync(Guid id)

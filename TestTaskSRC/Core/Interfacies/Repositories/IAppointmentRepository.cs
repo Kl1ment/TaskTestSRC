@@ -8,9 +8,9 @@ namespace DataAccess.Repositories
     {
         Task<Result> AddAsync(Appointment appointment);
         Task<Result> DeleteAsync(Guid id);
-        Task<List<AppointmentDTO>> GetDoctorAppointmentsAsync(Guid id, int page);
         Task<Result<Appointment>> GetByIdAsync(Guid id);
-        Task<List<AppointmentDTO>> GetPatientAppointmentsAsync(Guid id, int page);
+        Task<List<AppointmentDTO>> GetDoctorAppointmentsAsync(Guid doctorId, int page);
+        Task<List<AppointmentDTO>> GetPatientAppointmentsAsync(Guid patientId, int page);
         Task<Result> UpdateAsync(Appointment appointment);
     }
 }

@@ -26,9 +26,9 @@ namespace Application.Services
             return await districtRepository.GetAllAsync(page);
         }
 
-        public async Task<Result> DeleteDistrictAsync(int number)
+        public async Task<Result> DeleteDistrictAsync(Guid districtId)
         {
-            return await districtRepository.DeleteAsync(number);
+            return await districtRepository.DeleteAsync(districtId);
         }
     }
 }

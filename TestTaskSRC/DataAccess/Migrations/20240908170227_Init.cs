@@ -21,7 +21,6 @@ namespace DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cabinets", x => x.Id);
-                    table.UniqueConstraint("AK_Cabinets_Number", x => x.Number);
                 });
 
             migrationBuilder.CreateTable(
@@ -34,7 +33,6 @@ namespace DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Districts", x => x.Id);
-                    table.UniqueConstraint("AK_Districts_Number", x => x.Number);
                 });
 
             migrationBuilder.CreateTable(
@@ -42,12 +40,11 @@ namespace DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Specifications", x => x.Id);
-                    table.UniqueConstraint("AK_Specifications_Name", x => x.Name);
                 });
 
             migrationBuilder.CreateTable(
@@ -61,16 +58,17 @@ namespace DataAccess.Migrations
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Birthdate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Sex = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    District = table.Column<int>(type: "int", nullable: true)
+                    DistrictId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Patients", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Patients_Districts_District",
-                        column: x => x.District,
+                        name: "FK_Patients_Districts_DistrictId",
+                        column: x => x.DistrictId,
                         principalTable: "Districts",
-                        principalColumn: "Number");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -79,28 +77,31 @@ namespace DataAccess.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Cabinet = table.Column<int>(type: "int", nullable: true),
-                    Specification = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    District = table.Column<int>(type: "int", nullable: true)
+                    CabinetId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    SpecificationId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    DistrictId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Doctors", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Doctors_Cabinets_Cabinet",
-                        column: x => x.Cabinet,
+                        name: "FK_Doctors_Cabinets_CabinetId",
+                        column: x => x.CabinetId,
                         principalTable: "Cabinets",
-                        principalColumn: "Number");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Doctors_Districts_District",
-                        column: x => x.District,
+                        name: "FK_Doctors_Districts_DistrictId",
+                        column: x => x.DistrictId,
                         principalTable: "Districts",
-                        principalColumn: "Number");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
-                        name: "FK_Doctors_Specifications_Specification",
-                        column: x => x.Specification,
+                        name: "FK_Doctors_Specifications_SpecificationId",
+                        column: x => x.SpecificationId,
                         principalTable: "Specifications",
-                        principalColumn: "Name");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
                 });
 
             migrationBuilder.CreateTable(
@@ -140,24 +141,24 @@ namespace DataAccess.Migrations
                 column: "PatientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Doctors_Cabinet",
+                name: "IX_Doctors_CabinetId",
                 table: "Doctors",
-                column: "Cabinet");
+                column: "CabinetId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Doctors_District",
+                name: "IX_Doctors_DistrictId",
                 table: "Doctors",
-                column: "District");
+                column: "DistrictId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Doctors_Specification",
+                name: "IX_Doctors_SpecificationId",
                 table: "Doctors",
-                column: "Specification");
+                column: "SpecificationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Patients_District",
+                name: "IX_Patients_DistrictId",
                 table: "Patients",
-                column: "District");
+                column: "DistrictId");
         }
 
         /// <inheritdoc />

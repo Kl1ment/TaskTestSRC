@@ -42,13 +42,13 @@ namespace Application.Services
             return await patientRepository.GetAsync(patientSortField, page);
         }
 
-        public async Task<Result<Patient>> GetPatientByIdAsync(Guid id)
+        public async Task<Result<Patient>> GetPatientByIdAsync(Guid patientId)
         {
-            return await patientRepository.GetByIdAsync(id);
+            return await patientRepository.GetByIdAsync(patientId);
         }
 
         public async Task<Result> UpdatePatientAsync(
-            Guid id,
+            Guid patientId,
             string surname,
             string name,
             string patronymic,
@@ -58,7 +58,7 @@ namespace Application.Services
             Guid districtId)
         {
             var patient = Patient.Create(
-                id,
+                patientId,
                 surname,
                 name,
                 patronymic,
@@ -70,9 +70,9 @@ namespace Application.Services
             return await patientRepository.UpdateAsync(patient);
         }
 
-        public async Task<Result> DeleteAsync(Guid id)
+        public async Task<Result> DeleteAsync(Guid patientId)
         {
-            return await patientRepository.DeleteAsync(id);
+            return await patientRepository.DeleteAsync(patientId);
         }
 
         private PatientSortField DefineSortField(string sortField)

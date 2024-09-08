@@ -7,6 +7,6 @@ namespace DataAccess.Repositories
     {
         Task<Result> AddAsync(Specification specification);
         Task<List<Specification>> GetAllAsync(int page);
-        Task<Result> DeleteAsync(string name);
+        Task<Result> DeleteAsync(Guid id);
     }
 }

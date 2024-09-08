@@ -7,7 +7,9 @@ namespace TestTaskSRC.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class DoctorController(IDoctorService doctorService) : ControllerBase
+    public class DoctorController(
+        IDoctorService doctorService,
+        IAppointmentService appointmentService) : ControllerBase
     {
         [HttpGet]
         public async Task<ActionResult<List<DoctorDTOResponse>>> GetAllDoctors(string sortField, int page)
@@ -39,6 +41,22 @@ namespace TestTaskSRC.Controllers
                 result.Value.DistrictId);
         }
 
+        [HttpGet("Appointments")]
+        public async Task<List<AppointmentDTOResponse>> GetAppointmentsByPatientId(Guid doctorId, int page)
+        {
+            var appointments = await appointmentService.GetDoctorAppointmentsAsync(doctorId, page);
+
+            return appointments.Select(a => new AppointmentDTOResponse(
+                a.Id,
+                a.PatientSurname,
+                a.PatientName,
+                a.PatientPatronymic,
+                a.DoctorFullName,
+                a.Specification,
+                a.DateTime,
+                a.Cabinet)).ToList();
+        }
+
         [HttpPost]
         public async Task<ActionResult> CreateDoctor(DoctorCreate doctorCreate)
         {
@@ -55,10 +73,10 @@ namespace TestTaskSRC.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateDoctor(Guid id, DoctorCreate doctorCreate)
+        public async Task<ActionResult> UpdateDoctor(Guid doctorId, DoctorCreate doctorCreate)
         {
             var result = await doctorService.UpdateDoctorAsync(
-                id,
+                doctorId,
                 doctorCreate.FullName,
                 doctorCreate.CabinetId,
                 doctorCreate.SpecificationId,
@@ -71,9 +89,9 @@ namespace TestTaskSRC.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> DeleteDoctor(Guid id)
+        public async Task<ActionResult> DeleteDoctor(Guid doctorId)
         {
-            var result = await doctorService.DeleteDoctorAsync(id);
+            var result = await doctorService.DeleteDoctorAsync(doctorId);
 
             if (result.IsFailure)
                 return BadRequest(result.Error);

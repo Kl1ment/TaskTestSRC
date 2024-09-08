@@ -32,9 +32,9 @@ namespace TestTaskSRC.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> DeleteCabinet(int number)
+        public async Task<ActionResult> DeleteCabinet(Guid cabinetId)
         {
-            var result = await cabinetService.DeleteCabinetAsync(number);
+            var result = await cabinetService.DeleteCabinetAsync(cabinetId);
 
             if (result.IsFailure)
                 return BadRequest(result.Error);

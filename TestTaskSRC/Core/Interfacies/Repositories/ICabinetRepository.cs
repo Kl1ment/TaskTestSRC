@@ -7,6 +7,6 @@ namespace DataAccess.Repositories
     {
         Task<Result> AddAsync(Cabinet cabinet);
         Task<List<Cabinet>> GetAllAsync(int page);
-        Task<Result> DeleteAsync(int number);
+        Task<Result> DeleteAsync(Guid id);
     }
 }

@@ -8,9 +8,9 @@ namespace Application.Services
 {
     public class AppointmentService(IAppointmentRepository appointmentRepository) : IAppointmentService
     {
-        public async Task<Result<Appointment>> GetAppointmentByIdAsync(Guid id)
+        public async Task<Result<Appointment>> GetAppointmentByIdAsync(Guid appointmentId)
         {
-            return await appointmentRepository.GetByIdAsync(id);
+            return await appointmentRepository.GetByIdAsync(appointmentId);
         }
 
         public async Task<Result> AddAppointmentAsync(Guid patientId, Guid doctorId, DateTime dateTime)
@@ -24,20 +24,30 @@ namespace Application.Services
             return await appointmentRepository.AddAsync(appointment);
         }
 
-        public async Task<List<AppointmentDTO>> GetPatientAppointmentsAsync(Guid id, int page)
+        public async Task<List<AppointmentDTO>> GetPatientAppointmentsAsync(Guid patientId, int page)
         {
             var validator = new Validator();
 
             if (!validator.IsPositive(page - 1, nameof(page)).IsValid)
                 throw new ArgumentException(validator.Error);
 
-            return await appointmentRepository.GetPatientAppointmentsAsync(id, page);
+            return await appointmentRepository.GetPatientAppointmentsAsync(patientId, page);
         }
 
-        public async Task<Result> UpdateAppointmentAsync(Guid patientId, Guid doctorId, DateTime dateTime)
+        public async Task<List<AppointmentDTO>> GetDoctorAppointmentsAsync(Guid doctorId, int page)
+        {
+            var validator = new Validator();
+
+            if (!validator.IsPositive(page - 1, nameof(page)).IsValid)
+                throw new ArgumentException(validator.Error);
+
+            return await appointmentRepository.GetDoctorAppointmentsAsync(doctorId, page);
+        }
+
+        public async Task<Result> UpdateAppointmentAsync(Guid appointmentId, Guid patientId, Guid doctorId, DateTime dateTime)
         {
             var appointment = Appointment.Create(
-                Guid.NewGuid(),
+                appointmentId,
                 patientId,
                 doctorId,
                 dateTime);
@@ -45,9 +55,9 @@ namespace Application.Services
             return await appointmentRepository.UpdateAsync(appointment);
         }
 
-        public async Task<Result> DeleteAppointmentAsync(Guid id)
+        public async Task<Result> DeleteAppointmentAsync(Guid appointmentId)
         {
-            return await appointmentRepository.DeleteAsync(id);
+            return await appointmentRepository.DeleteAsync(appointmentId);
         }
     }
 }

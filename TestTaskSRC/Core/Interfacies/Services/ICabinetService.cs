@@ -7,6 +7,6 @@ namespace Application.Services
     {
         Task<Result> AddCabinetAsync(int number);
         Task<List<Cabinet>> GetAllCabinetsAsync(int page);
-        Task<Result> DeleteCabinetAsync(int number);
+        Task<Result> DeleteCabinetAsync(Guid cabinetId);
     }
 }

@@ -36,20 +36,20 @@ namespace Application.Services
             return await doctorRepository.GetAsync(doctorSortField, page);
         }
 
-        public async Task<Result<Doctor>> GetByIdAsync(Guid id)
+        public async Task<Result<Doctor>> GetByIdAsync(Guid doctorId)
         {
-            return await doctorRepository.GetByIdAsync(id);
+            return await doctorRepository.GetByIdAsync(doctorId);
         }
 
         public async Task<Result> UpdateDoctorAsync(
-            Guid id,
+            Guid doctorId,
             string fullName,
             Guid cabinetId,
             Guid specificationId,
             Guid districtId)
         {
             var doctor = Doctor.Create(
-                id,
+                doctorId,
                 fullName,
                 cabinetId,
                 specificationId,
@@ -58,9 +58,9 @@ namespace Application.Services
             return await doctorRepository.UpdateAsync(doctor);
         }
 
-        public async Task<Result> DeleteDoctorAsync(Guid id)
+        public async Task<Result> DeleteDoctorAsync(Guid doctorId)
         {
-            return await doctorRepository.DeleteAsync(id);
+            return await doctorRepository.DeleteAsync(doctorId);
         }
 
         private DoctorSortField DefineSortField(string sortField)

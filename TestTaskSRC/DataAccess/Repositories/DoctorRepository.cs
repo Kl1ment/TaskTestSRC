@@ -8,7 +8,7 @@ namespace DataAccess.Repositories
 {
     public class DoctorRepository(SRCDbContext context) : IDoctorRepository
     {
-        private const int PageSize = 2;
+        private const int PageSize = 10;
 
         public async Task<Result> AddAsync(Doctor doctor)
         {
@@ -47,14 +47,23 @@ namespace DataAccess.Repositories
             switch (sortField)
             {
                 case DoctorSortField.FullName: query = query.OrderBy(d => d.FullName); break;
-                case DoctorSortField.Cabinet: query = query.OrderBy(d => d.CabinetEntity); break;
-                case DoctorSortField.Specification: query = query.OrderBy(d => d.SpecificationEntity); break;
-                case DoctorSortField.District: query = query.OrderBy(d => d.DistrictEntity); break;
+
+                case DoctorSortField.Cabinet:
+                    query = query.OrderBy(d =>
+                    d.CabinetEntity == null ? 0 : d.CabinetEntity.Number); break;
+
+                case DoctorSortField.Specification:
+                    query = query.OrderBy(d => 
+                    d.SpecificationEntity == null ? "" : d.SpecificationEntity.Name); break;
+
+                case DoctorSortField.District:
+                    query = query.OrderBy(d =>
+                    d.DistrictEntity == null ? 0 : d.DistrictEntity.Number); break;
             }
 
-            var doctorEntity = await query.ToListAsync();
+            var doctorEntities = await query.ToListAsync();
 
-            return doctorEntity.Select(d => DoctorDOT.Create(
+            return doctorEntities.Select(d => DoctorDOT.Create(
                 d.Id,
                 d.FullName,
                 d.CabinetEntity?.Number,
@@ -89,6 +98,7 @@ namespace DataAccess.Repositories
                     .ExecuteUpdateAsync(p => p
                         .SetProperty(d => d.FullName, doctor.FullName)
                         .SetProperty(d => d.CabinetId, doctor.CabinetId)
+                        .SetProperty(d => d.SpecificationId, doctor.SpecificationId)
                         .SetProperty(d => d.DistrictId, doctor.DistrictId));
 
                 await context.SaveChangesAsync();

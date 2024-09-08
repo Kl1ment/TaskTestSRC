@@ -32,9 +32,9 @@ namespace TestTaskSRC.Controllers
         }
 
         [HttpDelete]
-        public async Task<ActionResult> DeleteDistrict(string name)
+        public async Task<ActionResult> DeleteDistrict(Guid specificationId)
         {
-            var result = await specificationService.DeleteSpecificationAsync(name);
+            var result = await specificationService.DeleteSpecificationAsync(specificationId);
 
             if (result.IsFailure)
                 return BadRequest(result.Error);

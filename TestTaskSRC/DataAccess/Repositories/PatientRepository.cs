@@ -8,7 +8,7 @@ namespace DataAccess.Repositories
 {
     internal class PatientRepository(SRCDbContext context) : IPatientRepository
     {
-        private const int PageSize = 2;
+        private const int PageSize = 10;
 
         public async Task<Result> AddAsync(Patient patient)
         {
@@ -41,18 +41,20 @@ namespace DataAccess.Repositories
         {
             var query = context.Patients
                 .AsNoTracking()
+                .Include(p => p.DistrictEntity)
                 .Skip(page - 1)
                 .Take(PageSize);
 
             switch (sortField)
             {
-                case PatientSortField.Surname: query = query.OrderBy(x => x.Surname); break;
-                case PatientSortField.Name: query = query.OrderBy(x => x.Name); break;
-                case PatientSortField.Patronymic: query = query.OrderBy(x => x.Patronymic); break;
-                case PatientSortField.Address: query = query.OrderBy(x => x.Address); break;
-                case PatientSortField.BirthDate: query = query.OrderBy(x => x.Birthdate); break;
-                case PatientSortField.Sex: query = query.OrderBy(x => x.Sex); break;
-                case PatientSortField.District: query = query.OrderBy(x => x.DistrictEntity); break;
+                case PatientSortField.Surname: query = query.OrderBy(p => p.Surname); break;
+                case PatientSortField.Name: query = query.OrderBy(p => p.Name); break;
+                case PatientSortField.Patronymic: query = query.OrderBy(p => p.Patronymic); break;
+                case PatientSortField.Address: query = query.OrderBy(p => p.Address); break;
+                case PatientSortField.BirthDate: query = query.OrderBy(p => p.Birthdate); break;
+                case PatientSortField.Sex: query = query.OrderBy(p => p.Sex); break;
+                case PatientSortField.District:query = query.OrderBy(p =>
+                    p.DistrictEntity == null ? 0 : p.DistrictEntity.Number); break;
             }
 
             var patientEntities = await query.ToListAsync();

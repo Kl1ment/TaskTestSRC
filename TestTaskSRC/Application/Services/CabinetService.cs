@@ -26,9 +26,9 @@ namespace Application.Services
             return await cabinetRepository.GetAllAsync(page);
         }
 
-        public async Task<Result> DeleteCabinetAsync(int number)
+        public async Task<Result> DeleteCabinetAsync(Guid cabinetId)
         {
-            return await cabinetRepository.DeleteAsync(number);
+            return await cabinetRepository.DeleteAsync(cabinetId);
         }
     }
 }
