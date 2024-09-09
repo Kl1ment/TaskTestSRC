@@ -11,7 +11,7 @@ namespace TestTaskSRC.Controllers
         IPatientService patientService,
         IAppointmentService appointmentService) : ControllerBase
     {
-        [HttpGet]
+        [HttpGet("All")]
         public async Task<ActionResult<List<PatientDTOResponse>>> GetAllPatients(string sortField, int page)
         {
             var patients = await patientService.GetAllPatientsAsync(sortField, page);
@@ -27,7 +27,7 @@ namespace TestTaskSRC.Controllers
                 p.District)).ToList();
         }
 
-        [HttpGet("{id:Guid}")]
+        [HttpGet]
         public async Task<ActionResult<PatientResponse>> GetPatientById(Guid patientId)
         {
             var result = await patientService.GetPatientByIdAsync(patientId);
